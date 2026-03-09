@@ -1,5 +1,7 @@
 import { kv } from "@vercel/kv";
 
+const APP_NAMESPACE = "orientetattoo-planoa";
+
 const ALLOWED_ORIGINS = new Set([
   "https://orientetattoo.app",
   "https://www.orientetattoo.app",
@@ -26,7 +28,7 @@ const PLANS_URL = "https://orientetattoo.app/planos";
 
 // PREENCHA AQUI COM O NÚMERO CORRETO, SOMENTE DÍGITOS
 // exemplo: 5565999999999
-const SUPPORT_WHATSAPP_NUMBER = "COLOQUE_AQUI_O_NUMERO";
+const SUPPORT_WHATSAPP_NUMBER = "5566999191380";
 
 // mensagem pré-preenchida
 const SUPPORT_WHATSAPP_TEXT =
@@ -209,8 +211,8 @@ export default async function handler(req, res) {
     }
 
     const { deviceId, userId, scopeType, scopeId } = scopeData;
-    const quotaKey = `quota:${scopeType}:${scopeId}`;
-    const userDevicesKey = userId ? `userdevices:${userId}` : null;
+    const quotaKey = `${APP_NAMESPACE}:quota:${scopeType}:${scopeId}`;
+    const userDevicesKey = userId ? `${APP_NAMESPACE}:userdevices:${userId}` : null;
 
     let quota = await getQuota(quotaKey);
     const now = Date.now();
