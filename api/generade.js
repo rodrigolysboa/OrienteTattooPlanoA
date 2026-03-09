@@ -4,6 +4,7 @@ const APP_NAMESPACE = "orientetattoo-planoa";
 
 const ALLOWED_ORIGINS = new Set([
   "https://orientetattoo.app",
+  "https://orientetattoo.app/app-planoa",
   "https://www.orientetattoo.app",
 ]);
 
