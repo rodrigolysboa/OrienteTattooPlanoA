@@ -153,7 +153,7 @@ function cooldownResponse(scopeType, quota, retryAfterSeconds) {
       total_used: quota.total_used,
       total_limit: TOTAL_PLAN_LIMIT,
       message:
-        "Esse aviso apareceu porque o app possui um sistema antibot para manter a estabilidade. Não é um bloqueio permanente. Basta aguardar o tempo indicado e depois continuar gerando normalmente. Esse bloqueio acontece a cada 8 gerações.",
+        "Esse aviso é apenas um sistema antibot para manter a estabilidade. Não é um bloqueio permanente. Basta aguardar o tempo indicado e depois continuar gerando normalmente. Esse bloqueio acontece a cada 8 gerações.",
     },
   };
 }
