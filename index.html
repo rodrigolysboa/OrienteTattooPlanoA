@@ -5,243 +5,113 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Gerador de Decalque — OrienteTattooApp</title>
   <style>
-    :root{
-      --bg:#0f1115;
-      --card:#171a21;
-      --card-2:#1d212b;
-      --line:rgba(255,255,255,.10);
-      --text:#ffffff;
-      --muted:rgba(255,255,255,.72);
-      --green:#25D366;
-      --green-dark:#0b1a12;
-      --blue:#2b6cff;
-      --yellow:#ffd54a;
-      --yellow-bg:rgba(255, 213, 74, .12);
-      --red:#ff5a7a;
-      --red-bg:rgba(255, 90, 122, .12);
-      --shadow:0 14px 40px rgba(0,0,0,.35);
+    body { font-family: Arial, sans-serif; background:#111; color:#fff; text-align:center; padding:32px; }
+    input, textarea, button, select {
+      width:100%; max-width:420px; margin:10px auto; padding:12px;
+      border-radius:8px; border:none; font-size:16px; display:block;
     }
+    button { background:#25D366; color:#0b1a12; cursor:pointer; font-weight:bold; }
+    button:disabled { opacity:.6; cursor:not-allowed; }
+    #loader { display:none; margin:12px auto 0; max-width:420px; font-size:14px; opacity:.9; }
+    #erro { display:none; margin:12px auto 0; max-width:420px; background:rgba(255,0,85,.15);
+      border:1px solid rgba(255,0,85,.4); padding:10px; border-radius:10px; text-align:left; font-size:14px; white-space:pre-wrap; }
+    img { max-width:420px; width:100%; margin-top:18px; border-radius:12px; background:#fff; }
+    .hint { max-width:420px; margin:6px auto 0; font-size:12px; opacity:.75; }
 
-    *{ box-sizing:border-box; }
-
-    body{
-      margin:0;
-      font-family: Arial, sans-serif;
-      background:linear-gradient(180deg,#0d0f14 0%,#12151d 100%);
-      color:var(--text);
-      text-align:center;
-      padding:28px 16px 42px;
-    }
-
-    .wrap{
-      width:100%;
-      max-width:460px;
-      margin:0 auto;
-    }
-
-    h1{
-      margin:0 0 8px;
-      font-size:28px;
-      line-height:1.1;
-    }
-
-    .hint{
-      max-width:420px;
-      margin:0 auto 14px;
-      font-size:13px;
-      line-height:1.5;
-      color:var(--muted);
-    }
-
-    .usage-pill{
-      display:none;
-      margin:0 auto 14px;
-      width:100%;
-      max-width:420px;
-      background:rgba(37,211,102,.10);
-      border:1px solid rgba(37,211,102,.28);
-      color:#dfffe9;
-      border-radius:999px;
-      padding:10px 14px;
-      font-size:13px;
-      font-weight:700;
-      box-shadow:var(--shadow);
-    }
-
-    .card{
-      width:100%;
-      max-width:420px;
-      margin:0 auto;
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px;
-      box-shadow:var(--shadow);
-    }
-
-    input, textarea, button, select{
-      width:100%;
-      max-width:100%;
-      margin:10px auto;
-      padding:13px 14px;
-      border-radius:12px;
-      border:none;
-      font-size:16px;
-      display:block;
-    }
-
-    input, textarea, select{
-      background:#0f131a;
-      color:#fff;
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    textarea{
-      min-height:98px;
-      resize:vertical;
-    }
-
-    button{
-      background:var(--green);
-      color:var(--green-dark);
-      cursor:pointer;
-      font-weight:800;
-      transition:.18s ease;
-    }
-
-    button:hover{ transform:translateY(-1px); }
-    button:disabled{
-      opacity:.62;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    #loader{
-      display:none;
-      margin:12px auto 0;
-      max-width:420px;
-      font-size:14px;
-      color:var(--muted);
-    }
-
-    #erro{
-      display:none;
-      margin:12px auto 0;
-      max-width:420px;
-      background:var(--red-bg);
-      border:1px solid rgba(255,90,122,.35);
-      padding:12px;
-      border-radius:14px;
-      text-align:left;
-      font-size:14px;
-      white-space:pre-wrap;
-    }
-
+    /* Caixa cooldown / aviso */
     #cooldownBox{
+      display:none; margin:14px auto 0; max-width:420px;
+      background:rgba(255, 210, 0, .12);
+      border:1px solid rgba(255, 210, 0, .35);
+      padding:12px; border-radius:12px; text-align:left;
+    }
+
+    /* ===== Modal de plano ===== */
+    #planModal{
       display:none;
-      margin:14px auto 0;
-      max-width:420px;
-      background:var(--yellow-bg);
-      border:1px solid rgba(255,213,74,.35);
-      padding:14px;
-      border-radius:14px;
-      text-align:left;
-      box-shadow:var(--shadow);
-    }
-
-    #planBox{
-      display:none;
-      margin:14px auto 0;
-      max-width:420px;
-      background:rgba(43,108,255,.12);
-      border:1px solid rgba(43,108,255,.35);
-      padding:14px;
-      border-radius:14px;
-      text-align:left;
-      box-shadow:var(--shadow);
-    }
-
-    .box-title{
-      font-size:16px;
-      font-weight:800;
-      margin:0 0 8px;
-    }
-
-    .box-text{
-      font-size:14px;
-      line-height:1.5;
-      color:#f1f5ff;
-    }
-
-    .mini{
-      margin-top:8px;
-      font-size:12px;
-      color:rgba(255,255,255,.82);
-    }
-
-    .box-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:14px;
-    }
-
-    .box-actions a,
-    .box-actions button{
-      flex:1 1 180px;
-      text-decoration:none;
-      text-align:center;
-      display:flex;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.72);
+      z-index:9999;
       align-items:center;
       justify-content:center;
-      min-height:48px;
-      border-radius:12px;
-      font-weight:800;
-      padding:12px 14px;
+      padding:20px;
     }
-
-    .btn-whats{
-      background:var(--green);
-      color:var(--green-dark);
+    #planModal.show{
+      display:flex;
     }
-
-    .btn-plan{
-      background:var(--blue);
-      color:#fff;
-    }
-
-    .btn-neutral{
-      background:#2b3240;
-      color:#fff;
-    }
-
-    img{
-      max-width:420px;
+    .plan-modal-card{
       width:100%;
-      margin-top:18px;
-      border-radius:12px;
-      background:#fff;
+      max-width:460px;
+      background:#161616;
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:18px;
+      box-shadow:0 18px 50px rgba(0,0,0,.45);
+      padding:24px 20px;
+      text-align:center;
+    }
+    .plan-modal-card h2{
+      margin:0 0 12px;
+      font-size:24px;
+      line-height:1.2;
+      color:#fff;
+    }
+    .plan-modal-card p{
+      margin:0;
+      color:rgba(255,255,255,.88);
+      font-size:15px;
+      line-height:1.6;
+    }
+    .plan-modal-actions{
+      margin-top:20px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+    .plan-modal-actions a,
+    .plan-modal-actions button{
+      width:auto;
+      max-width:none;
+      min-width:170px;
+      margin:0;
+      padding:12px 16px;
+      border-radius:10px;
+      border:none;
+      font-size:15px;
+      font-weight:700;
+      text-decoration:none;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .plan-modal-upgrade{
+      background:#25D366;
+      color:#0b1a12;
+    }
+    .plan-modal-close{
+      background:#2c2c2c;
+      color:#fff;
     }
 
-    /* ===== Comparador antes/depois ===== */
+    /* ===== Comparador antes/depois (ARRASTÁVEL) ===== */
     .ot-compare-wrap{
       width:100%;
       max-width:420px;
-      margin:18px auto 0;
+      margin: 18px auto 0;
     }
-
     .ot-compare{
       position:relative;
       width:100%;
-      border-radius:14px;
+      border-radius:12px;
       overflow:hidden;
       background:#fff;
       border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 10px 30px rgba(0,0,0,.35);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
       user-select:none;
-      touch-action:pan-y;
+      touch-action: pan-y;
     }
-
     .ot-compare img{
       width:100%;
       height:auto;
@@ -250,17 +120,13 @@
       user-select:none;
       pointer-events:none;
       background:#fff;
-      margin:0;
-      border-radius:0;
     }
-
     .ot-compare .ot-after{
       position:absolute;
       inset:0;
       width:50%;
       overflow:hidden;
     }
-
     .ot-compare .ot-label{
       position:absolute;
       top:10px;
@@ -272,10 +138,9 @@
       border-radius:999px;
       background:rgba(0,0,0,.55);
       color:#fff;
-      backdrop-filter:blur(6px);
+      backdrop-filter: blur(6px);
       pointer-events:none;
     }
-
     .ot-compare .ot-label.before{ left:10px; }
     .ot-compare .ot-label.after{ right:10px; }
 
@@ -283,31 +148,29 @@
       position:absolute;
       top:0;
       left:50%;
-      transform:translateX(-50%);
+      transform: translateX(-50%);
       width:4px;
       height:100%;
       background:#00ff66;
-      box-shadow:0 0 14px rgba(0,255,102,.75);
+      box-shadow: 0 0 14px rgba(0,255,102,.75);
       border-radius:999px;
       z-index:6;
       pointer-events:none;
     }
-
     .ot-compare .ot-slider{
       position:absolute;
       top:0;
       left:50%;
-      transform:translateX(-50%);
+      transform: translateX(-50%);
       height:100%;
       width:52px;
       z-index:7;
       display:flex;
       align-items:center;
       justify-content:center;
-      cursor:ew-resize;
-      touch-action:none;
+      cursor: ew-resize;
+      touch-action: none;
     }
-
     .ot-compare .ot-knob{
       position:relative;
       background:#00ff66;
@@ -317,18 +180,18 @@
       padding:8px 12px;
       font-size:14px;
       line-height:1;
-      box-shadow:0 0 18px rgba(0,255,102,.75);
+      box-shadow: 0 0 18px rgba(0,255,102,.75);
     }
 
+    /* Botões de ação */
     .actions{
       max-width:420px;
-      margin:10px auto 0;
+      margin: 10px auto 0;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       justify-content:center;
     }
-
     .actions button{
       width:auto;
       max-width:none;
@@ -338,45 +201,53 @@
       background:#2b6cff;
       color:#fff;
       font-weight:800;
-      margin:0;
     }
-
     .actions button.secondary{ background:#444; }
-    .actions button.tertiary{
-      background:#25D366;
-      color:#0b1a12;
-    }
+    .actions button.tertiary{ background:#25D366; color:#0b1a12; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>Gerador de Decalque</h1>
-    <div class="hint">
-      Este plano libera <b>50 gerações no total</b>.<br>
-      A cada <b>8 gerações</b>, o app ativa uma pausa de <b>5 minutos</b> para estabilidade e proteção antibot.
+
+  <h1>Gerador de Decalque</h1>
+  <div class="hint">Limite temporário de uso: <b>20 gerações</b>. Ao atingir, aguarde <b>10 minutos</b> e libera novamente.</div>
+
+  <input type="file" id="image" accept="image/*" />
+
+  <select id="style">
+    <option value="line">Modo 1 — Decalque linhas (line art puro)</option>
+    <option value="shadow">Modo 2 — Linhas + sombra leve</option>
+    <option value="clean" selected>Modo 3 — Tatuagem → desenho clean</option>
+  </select>
+
+  <textarea id="prompt" placeholder="(Opcional) Observações: ex: traço fino, completar parte escondida..."></textarea>
+
+  <button id="btnGerar">Gerar Decalque</button>
+
+  <div id="loader">⏳ Gerando... (não feche a página)</div>
+  <div id="erro"></div>
+
+  <div id="cooldownBox"></div>
+
+  <div id="resultado"></div>
+
+  <!-- Modal limite do plano -->
+  <div id="planModal" aria-hidden="true">
+    <div class="plan-modal-card">
+      <h2>Limite do plano atingido</h2>
+      <p id="planModalText">O limite do seu plano foi atingido.</p>
+      <div class="plan-modal-actions">
+        <a
+          id="planModalLink"
+          class="plan-modal-upgrade"
+          href="https://orientetattoo.app/planos"
+        >Aumentar plano</a>
+        <button
+          type="button"
+          id="planModalClose"
+          class="plan-modal-close"
+        >Fechar</button>
+      </div>
     </div>
-
-    <div id="usagePill" class="usage-pill"></div>
-
-    <div class="card">
-      <input type="file" id="image" accept="image/*" />
-
-      <select id="style">
-        <option value="line">Modo 1 — Decalque linhas (line art puro)</option>
-        <option value="shadow">Modo 2 — Linhas + sombra leve</option>
-        <option value="clean" selected>Modo 3 — Tatuagem → desenho clean</option>
-      </select>
-
-      <textarea id="prompt" placeholder="(Opcional) Observações: ex: traço fino, completar parte escondida..."></textarea>
-
-      <button id="btnGerar">Gerar Decalque</button>
-    </div>
-
-    <div id="loader">⏳ Gerando... não feche a página.</div>
-    <div id="erro"></div>
-    <div id="cooldownBox"></div>
-    <div id="planBox"></div>
-    <div id="resultado"></div>
   </div>
 
   <script>
@@ -385,16 +256,21 @@
     const erroBox = document.getElementById("erro");
     const resultado = document.getElementById("resultado");
     const cooldownBox = document.getElementById("cooldownBox");
-    const planBox = document.getElementById("planBox");
-    const usagePill = document.getElementById("usagePill");
 
+    const planModal = document.getElementById("planModal");
+    const planModalText = document.getElementById("planModalText");
+    const planModalLink = document.getElementById("planModalLink");
+    const planModalClose = document.getElementById("planModalClose");
+
+    // Config
     const MAX_FILE_MB = 6;
     const MAX_W = 1200;
     const JPEG_QUALITY = 0.86;
     const API_TIMEOUT_MS = 60000;
-    const API_URL = "/api/generate";
+    const PLAN_UPGRADE_URL = "https://orientetattoo.app/planos";
 
-    let cooldownInterval = null;
+    // Endpoint
+    const API_URL = "/api/generate";
 
     function showError(msg) {
       erroBox.style.display = "block";
@@ -406,45 +282,39 @@
       erroBox.textContent = "";
     }
 
-    function stopCooldownTimer() {
-      if (cooldownInterval) {
-        clearInterval(cooldownInterval);
-        cooldownInterval = null;
-      }
+    function showCooldown(msgHtml){
+      cooldownBox.style.display = "block";
+      cooldownBox.innerHTML = msgHtml;
     }
 
-    function hideCooldown() {
-      stopCooldownTimer();
+    function hideCooldown(){
       cooldownBox.style.display = "none";
       cooldownBox.innerHTML = "";
     }
 
-    function hidePlanBox() {
-      planBox.style.display = "none";
-      planBox.innerHTML = "";
+    function showPlanModal(message, url = PLAN_UPGRADE_URL){
+      planModalText.textContent = message;
+      planModalLink.href = url;
+      planModal.classList.add("show");
+      planModal.setAttribute("aria-hidden", "false");
     }
 
-    function updateUsagePill(quota) {
-      if (!quota || typeof quota.total_used === "undefined" || typeof quota.total_limit === "undefined") {
-        usagePill.style.display = "none";
-        usagePill.textContent = "";
-        return;
+    function hidePlanModal(){
+      planModal.classList.remove("show");
+      planModal.setAttribute("aria-hidden", "true");
+    }
+
+    planModalClose.addEventListener("click", hidePlanModal);
+
+    planModal.addEventListener("click", (e) => {
+      if (e.target === planModal) hidePlanModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && planModal.classList.contains("show")) {
+        hidePlanModal();
       }
-
-      const totalUsed = Number(quota.total_used || 0);
-      const totalLimit = Number(quota.total_limit || 0);
-      const restam = Math.max(totalLimit - totalUsed, 0);
-
-      usagePill.style.display = "block";
-      usagePill.textContent = `Uso do plano: ${totalUsed}/${totalLimit} gerações • Restam ${restam}`;
-    }
-
-    function secondsToMinSec(s) {
-      const total = Math.max(0, Number(s || 0));
-      const m = Math.floor(total / 60);
-      const r = total % 60;
-      return `${m}m ${String(r).padStart(2, "0")}s`;
-    }
+    });
 
     function getDeviceId() {
       const key = "__ot_device_id__";
@@ -472,20 +342,17 @@
       const img = await new Promise((resolve, reject) => {
         const url = URL.createObjectURL(file);
         const i = new Image();
-        i.onload = () => {
-          URL.revokeObjectURL(url);
-          resolve(i);
-        };
+        i.onload = () => { URL.revokeObjectURL(url); resolve(i); };
         i.onerror = () => {
           URL.revokeObjectURL(url);
-          reject(new Error("Nao consegui ler a imagem. Se for iPhone (HEIC), converta para JPG e tente novamente."));
+          reject(new Error("Não consegui ler a imagem. Se for iPhone (HEIC), converta para JPG e tente novamente."));
         };
         i.src = url;
       });
 
       let w = img.naturalWidth || img.width;
       let h = img.naturalHeight || img.height;
-      if (!w || !h) throw new Error("Imagem invalida.");
+      if (!w || !h) throw new Error("Imagem inválida.");
 
       if (w > MAX_W) {
         const ratio = MAX_W / w;
@@ -504,7 +371,7 @@
       return { base64: dataUrl.split(",")[1], mimeType: "image/jpeg" };
     }
 
-    async function fileToImageEl(file) {
+    async function fileToImageEl(file){
       return await new Promise((resolve, reject) => {
         const url = URL.createObjectURL(file);
         const img = new Image();
@@ -517,83 +384,17 @@
       });
     }
 
-    function startCooldownBox(data) {
-      stopCooldownTimer();
-
-      let seconds = Math.max(0, Number(data?.retry_after_seconds || 0));
-      const used = Number(data?.used ?? data?.batch_used ?? 0);
-      const limit = Number(data?.limit ?? data?.batch_limit ?? 8);
-      const totalUsed = Number(data?.total_used ?? 0);
-      const totalLimit = Number(data?.total_limit ?? 50);
-
-      const render = () => {
-        cooldownBox.style.display = "block";
-        cooldownBox.innerHTML = `
-          <div class="box-title">Pausa temporaria ativada</div>
-          <div class="box-text">
-            Esse aviso apareceu porque o app possui um <b>sistema antibot</b> para manter a estabilidade e evitar uso abusivo.<br><br>
-            Nao e um bloqueio permanente. Basta aguardar <b>${secondsToMinSec(seconds)}</b> e depois gerar novamente.<br><br>
-            Essa pausa acontece a cada <b>${limit} geracoes</b>.
-          </div>
-          <div class="mini">
-            Lote atual: <b>${used}/${limit}</b> • Plano: <b>${totalUsed}/${totalLimit}</b>
-          </div>
-        `;
-      };
-
-      render();
-
-      if (seconds <= 0) return;
-
-      cooldownInterval = setInterval(() => {
-        seconds -= 1;
-        if (seconds <= 0) {
-          stopCooldownTimer();
-          cooldownBox.innerHTML = `
-            <div class="box-title">Liberado novamente</div>
-            <div class="box-text">
-              Sua pausa terminou. Voce ja pode gerar novas imagens normalmente.
-            </div>
-          `;
-          return;
-        }
-        render();
-      }, 1000);
+    function secondsToMinSec(s){
+      const m = Math.floor(s / 60);
+      const r = s % 60;
+      return `${m}m ${String(r).padStart(2, "0")}s`;
     }
 
-    function showPlanLimitBox(data) {
-      hideCooldown();
-
-      const message =
-        data?.message ||
-        "Seu limite encerrou! Entre em contato com o suporte para liberar mais geracoes ou atualize agora mesmo.";
-
-      const whatsappUrl = data?.support?.whatsapp_url || "";
-      const plansUrl = data?.plans?.url || "https://orientetattoo.app/planos";
-      const totalUsed = Number(data?.total_used ?? 50);
-      const totalLimit = Number(data?.total_limit ?? 50);
-
-      planBox.style.display = "block";
-      planBox.innerHTML = `
-        <div class="box-title">Seu limite encerrou</div>
-        <div class="box-text">
-          ${message}
-        </div>
-        <div class="mini">
-          Uso final do plano: <b>${totalUsed}/${totalLimit}</b>
-        </div>
-        <div class="box-actions">
-          ${whatsappUrl ? `<a class="btn-whats" href="${whatsappUrl}" target="_blank" rel="noopener">Falar com suporte</a>` : ``}
-          <a class="btn-plan" href="${plansUrl}" target="_blank" rel="noopener">Atualizar plano</a>
-        </div>
-      `;
-    }
-
-    function clamp(n, min, max) {
+    function clamp(n, min, max){
       return Math.max(min, Math.min(max, n));
     }
 
-    function mountCompare(beforeSrc, afterSrc) {
+    function mountCompare(beforeSrc, afterSrc){
       resultado.innerHTML = "";
 
       const wrap = document.createElement("div");
@@ -625,7 +426,7 @@
       actions.innerHTML = `
         <button id="downloadBtn">Baixar</button>
         <button id="againBtn" class="secondary">Gerar novamente</button>
-        <button id="resetBtn" class="tertiary">Comecar de novo</button>
+        <button id="resetBtn" class="tertiary">Começar de novo</button>
       `;
 
       resultado.appendChild(wrap);
@@ -644,14 +445,14 @@
       afterImg.src = afterSrc;
       resultImg.src = afterSrc;
 
-      function setComparePositionByPercent(pct) {
+      function setComparePositionByPercent(pct){
         const p = clamp(pct, 0, 100);
         afterOverlay.style.width = p + "%";
         compareSlider.style.left = p + "%";
         compareLine.style.left = p + "%";
       }
 
-      (function initCompareDrag() {
+      (function initCompareDrag(){
         let dragging = false;
 
         const getPercentFromClientX = (clientX) => {
@@ -700,21 +501,18 @@
       document.getElementById("resetBtn").onclick = () => location.reload();
     }
 
-    function showOriginalAsResult(beforeSrc) {
-      cooldownBox.style.display = "block";
-      cooldownBox.innerHTML = `
-        <div class="box-title">Nao foi possivel gerar agora</div>
-        <div class="box-text">
-          Mostrando a imagem original enviada, sem alteracoes.
-        </div>
-      `;
+    function showOriginalAsResult(beforeSrc){
+      showCooldown(
+        `<b>Não foi possível gerar agora.</b><br><br>` +
+        `Mostrando a imagem original enviada (sem alterações).`
+      );
       mountCompare(beforeSrc, beforeSrc);
     }
 
     async function gerar() {
       clearError();
       hideCooldown();
-      hidePlanBox();
+      hidePlanModal();
       resultado.innerHTML = "";
 
       const file = document.getElementById("image").files[0];
@@ -728,7 +526,7 @@
 
       const mb = file.size / (1024 * 1024);
       if (mb > MAX_FILE_MB) {
-        showError(`Arquivo muito grande (${mb.toFixed(2)}MB). Use ate ${MAX_FILE_MB}MB.`);
+        showError(`Arquivo muito grande (${mb.toFixed(2)}MB). Use até ${MAX_FILE_MB}MB.`);
         return;
       }
 
@@ -738,9 +536,11 @@
       loader.style.display = "block";
 
       let beforeSrc = "";
+      let beforeImgEl = null;
 
       try {
         const before = await fileToImageEl(file);
+        beforeImgEl = before.img;
         beforeSrc = before.url;
 
         const { base64: imageBase64, mimeType } = await fileToBase64Compressed(file);
@@ -767,32 +567,36 @@
         clearTimeout(t);
         const data = await res.json().catch(() => ({}));
 
-        if (data?.quota) {
-          updateUsagePill(data.quota);
-        } else if (typeof data?.total_used !== "undefined" && typeof data?.total_limit !== "undefined") {
-          updateUsagePill({
-            total_used: data.total_used,
-            total_limit: data.total_limit
-          });
-        }
-
         if (res.status === 429 && data?.code === "COOLDOWN") {
-          startCooldownBox(data);
+          const retry = Number(data.retry_after_seconds || 0);
+          showCooldown(
+            `<b>Limite temporário atingido.</b><br><br>` +
+            `Aguarde <b>${secondsToMinSec(retry)}</b> e tente novamente.<br>` +
+            `Você usou <b>${data.used ?? 20}/${data.limit ?? 20}</b> neste lote.`
+          );
           return;
         }
 
-        if (res.status === 403 && data?.code === "PLAN_LIMIT_REACHED") {
-          updateUsagePill({
-            total_used: data?.total_used ?? 50,
-            total_limit: data?.total_limit ?? 50
-          });
-          showPlanLimitBox(data);
+        if (res.status === 429 && data?.code === "PLAN_LIMIT") {
+          const used = Number(data.used || 50);
+          const limit = Number(data.limit || 50);
+
+          showPlanModal(
+            `O limite do seu plano de ${limit} gerações foi atingido. Aumente seu plano ou adquira mais créditos.`,
+            PLAN_UPGRADE_URL
+          );
+
+          showCooldown(
+            `<b>Limite do plano atingido.</b><br><br>` +
+            `Uso atual: <b>${used}/${limit}</b> gerações.<br>` +
+            `Para continuar, aumente seu plano ou adquira mais créditos.`
+          );
           return;
         }
 
         if (!res.ok || !data.imageBase64) {
           if (beforeSrc) showOriginalAsResult(beforeSrc);
-          else showError("Nao foi possivel gerar agora. Tente novamente.");
+          else showError("Não foi possível gerar agora. Tente novamente.");
           return;
         }
 
@@ -803,10 +607,7 @@
         if (beforeSrc) {
           showOriginalAsResult(beforeSrc);
         } else {
-          const isTimeout = err && (
-            err.name === "AbortError" ||
-            String(err.message || "").toLowerCase().includes("abort")
-          );
+          const isTimeout = err && (err.name === "AbortError" || String(err.message || "").toLowerCase().includes("abort"));
           showError("Erro: " + (isTimeout ? "Tempo excedido. Tente novamente." : (err?.message || String(err))));
         }
       } finally {
@@ -818,5 +619,6 @@
 
     btn.addEventListener("click", gerar);
   </script>
+
 </body>
 </html>
