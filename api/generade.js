@@ -1,8 +1,8 @@
 import { kv } from "@vercel/kv";
 
 const ALLOWED_ORIGINS = new Set([
-  "https://planoa.orientetattoo.app",
-  "https://www.planoa.orientetattoo.app",
+  "https://orientetattoo.app",
+  "https://www.orientetattoo.app",
 ]);
 
 export default async function handler(req, res) {
