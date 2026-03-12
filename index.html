@@ -578,8 +578,8 @@
         }
 
         if (res.status === 429 && data?.code === "PLAN_LIMIT") {
-          const used = Number(data.used || 50);
-          const limit = Number(data.limit || 50);
+          const used = Number(data.used || 3);
+          const limit = Number(data.limit || 3);
 
           showPlanModal(
             `O limite do seu plano de ${limit} gerações foi atingido. Escolha um plano superior para continuar usando sem interrupções.`,
