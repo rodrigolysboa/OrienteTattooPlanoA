@@ -37,7 +37,7 @@ export default async function handler(req, res) {
       limit: {
         perBatch: 20,
         cooldownMinutes: 10,
-        planTotal: 50,
+        planTotal: 3,
       },
     });
   }
@@ -68,9 +68,9 @@ export default async function handler(req, res) {
 
     // =========================
     // NOVO: LIMITE TOTAL DO PLANO
-    // 50 imagens totais no plano
+    // 3 imagens totais no plano
     // =========================
-    const PLAN_TOTAL_LIMIT = 50;
+    const PLAN_TOTAL_LIMIT = 3;
     const planUsedKey = `planused:${scopeType}:${scopeId}`;
     const planTtlSeconds = 60 * 60 * 24 * 365; // 1 ano
 
